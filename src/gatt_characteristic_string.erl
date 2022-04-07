@@ -10,6 +10,11 @@
                }).
 
 init(_Path, Opts) ->
+    Descriptors =
+        [
+         {gatt_descriptor_cud, 0, ["WiFi Remove"]},
+         {gatt_descriptor_pf, 1, [utf8_string]}
+        ],
     Required = fun(K) ->
                        case lists:keyfind(K, 1, Opts) of
                            false -> error({required_value, K});
@@ -17,7 +22,7 @@ init(_Path, Opts) ->
                        end
                end,
     %% TODO: Add CUD descriptor for name in opts?
-    {ok, [], #state{uuid=Required(uuid),
+    {ok, Descriptors, #state{uuid=Required(uuid),
                     value=unicode:characters_to_binary(Required(value))}}.
 
 uuid(#state{uuid=UUID}) ->
